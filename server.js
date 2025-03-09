@@ -8,18 +8,20 @@ const imageRoutes = require("./routes/images");
 const swaggerDocument = require("./docs/swagger.json");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
+
 const userDbPath = path.join(__dirname, "../user_dbs");
 
+// Create Express app
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-
+// Ensure user database directory exists
 if (!fs.existsSync(userDbPath)) {
     fs.mkdirSync(userDbPath);
 }
 
+// Function to create a database for each user
 function createUserDatabase(userId) {
     const dbFile = path.join(userDbPath, `${userId}.sqlite3`);
 
@@ -41,7 +43,6 @@ function createUserDatabase(userId) {
 
 module.exports = { createUserDatabase };
 
-
 // Swagger Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -50,7 +51,13 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/images", imageRoutes);
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export app for Passenger
+module.exports = app;
+
+// If not running under Passenger, start manually
+if (!process.env.PASSENGER_APP_ENV) {
+    const PORT = process.env.PORT || 3001;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
