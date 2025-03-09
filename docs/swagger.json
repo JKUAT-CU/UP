@@ -1,0 +1,32 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "My Project API",
+    "version": "1.0.0",
+    "description": "API documentation for My Project"
+  },
+  "paths": {
+    "/api/users/register": {
+      "post": {
+        "summary": "Register a new user",
+        "parameters": [
+          { "name": "userId", "in": "body", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "User registered successfully" }
+        }
+      }
+    },
+    "/api/images/upload": {
+      "post": {
+        "summary": "Upload an image",
+        "parameters": [
+          { "name": "userId", "in": "body", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "Image uploaded successfully" }
+        }
+      }
+    }
+  }
+}
